@@ -16,8 +16,8 @@
     <style>
         /* أنماط عامة */
         :root {
-            --primary-color: #2c5aa0;
-            --secondary-color: #4a90e2;
+            --primary-color: #556B2F;
+            --secondary-color: #6B8E23;
             --success-color: #4CAF50;
             --danger-color: #f44336;
             --warning-color: #ff9800;
@@ -26,6 +26,12 @@
             --border-color: #ddd;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
+            
+            /* ألوان زيتية إضافية */
+            --olive-light: #8FBC8F;
+            --olive-dark: #2F4F2F;
+            --olive-bg: #F5F5DC;
+            --olive-hover: #6B8E23;
             
             /* خطوط مخصصة */
             --font-heading: 'Cairo', 'Tajawal', sans-serif;
@@ -40,7 +46,7 @@
         }
 
         body {
-            background-color: #f5f7fa;
+            background-color: #f8f9f5;
             color: #333;
             line-height: 1.6;
             padding-bottom: 40px;
@@ -102,16 +108,17 @@
             transition: var(--transition);
             border-bottom: 4px solid transparent;
             letter-spacing: -0.5px;
+            color: var(--primary-color);
         }
 
         .tab:hover {
-            background-color: #f0f5ff;
+            background-color: #f5f5dc;
         }
 
         .tab.active {
-            color: var(--primary-color);
-            border-bottom: 4px solid var(--primary-color);
-            background-color: #f0f5ff;
+            color: white;
+            border-bottom: 4px solid var(--secondary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         }
 
         /* محتوى التبويبات */
@@ -149,7 +156,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
+            color: var(--olive-dark);
             font-family: var(--font-heading);
             font-size: 1.05rem;
         }
@@ -168,13 +175,13 @@
         input:focus, select:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+            box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.1);
         }
 
         .btn {
             display: inline-block;
             padding: 14px 28px;
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border: none;
             border-radius: 8px;
@@ -188,33 +195,33 @@
         }
 
         .btn:hover {
-            background-color: #1e4a8a;
+            background: linear-gradient(135deg, var(--olive-dark), var(--olive-hover));
             transform: translateY(-2px);
             box-shadow: var(--shadow);
         }
 
         .btn-success {
-            background-color: var(--success-color);
+            background: linear-gradient(135deg, var(--success-color), #3d8b40);
         }
 
         .btn-success:hover {
-            background-color: #3d8b40;
+            background: linear-gradient(135deg, #3d8b40, #2E7D32);
         }
 
         .btn-danger {
-            background-color: var(--danger-color);
+            background: linear-gradient(135deg, var(--danger-color), #d32f2f);
         }
 
         .btn-danger:hover {
-            background-color: #d32f2f;
+            background: linear-gradient(135deg, #d32f2f, #c62828);
         }
 
         .btn-warning {
-            background-color: var(--warning-color);
+            background: linear-gradient(135deg, var(--warning-color), #e68900);
         }
 
         .btn-warning:hover {
-            background-color: #e68900;
+            background: linear-gradient(135deg, #e68900, #d17a00);
         }
 
         .btn-sm {
@@ -249,15 +256,15 @@
         }
 
         th {
-            background-color: #f0f5ff;
-            color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
             font-weight: 700;
             font-family: var(--font-heading);
             font-size: 1.1rem;
         }
 
         tr:hover {
-            background-color: #f9f9f9;
+            background-color: #f5f5dc;
         }
 
         .no-data {
@@ -339,16 +346,18 @@
             text-align: center;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            border: 2px solid transparent;
         }
 
         .counter:hover {
             transform: translateY(-5px);
+            border-color: var(--primary-color);
         }
 
         .counter h3 {
             font-size: 1.3rem;
             margin-bottom: 15px;
-            color: #555;
+            color: var(--olive-dark);
             font-weight: 600;
         }
 
@@ -356,17 +365,21 @@
             font-size: 3.2rem;
             font-weight: 800;
             font-family: 'Cairo', sans-serif;
+            color: var(--primary-color);
         }
 
         .present-counter {
+            background: linear-gradient(135deg, #f8fff8, #e8f5e9);
             border-top: 5px solid var(--success-color);
         }
 
         .absent-counter {
+            background: linear-gradient(135deg, #fff8f8, #ffebee);
             border-top: 5px solid var(--danger-color);
         }
 
         .late-counter {
+            background: linear-gradient(135deg, #fffbf0, #fff3e0);
             border-top: 5px solid var(--warning-color);
         }
 
@@ -385,30 +398,30 @@
         .alert-warning {
             background-color: #fff3cd;
             color: #856404;
-            border-left: 5px solid #ffc107;
+            border-right: 5px solid #ffc107;
         }
 
         .alert-success {
             background-color: #d4edda;
             color: #155724;
-            border-left: 5px solid #28a745;
+            border-right: 5px solid #28a745;
         }
 
         .alert-info {
             background-color: #d1ecf1;
             color: #0c5460;
-            border-left: 5px solid #17a2b8;
+            border-right: 5px solid #17a2b8;
         }
 
         /* التاريخ اليوم */
         .today-date {
-            background: white;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
             padding: 16px;
             border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
             font-weight: 700;
-            color: var(--primary-color);
             box-shadow: var(--shadow);
             display: flex;
             justify-content: center;
@@ -437,9 +450,10 @@
             text-align: center;
             margin-top: 50px;
             padding: 20px;
-            color: #777;
+            color: white;
             font-size: 1rem;
-            border-top: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
             font-family: var(--font-body);
         }
 
@@ -561,11 +575,11 @@
         }
         
         .message-success {
-            background-color: var(--success-color);
+            background: linear-gradient(135deg, var(--success-color), #3d8b40);
         }
         
         .message-error {
-            background-color: var(--danger-color);
+            background: linear-gradient(135deg, var(--danger-color), #d32f2f);
         }
         
         @keyframes slideIn {
@@ -611,11 +625,11 @@
         
         /* تحسينات للزر الجديد */
         .btn-pdf {
-            background-color: #d32f2f;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
         }
         
         .btn-pdf:hover {
-            background-color: #b71c1c;
+            background: linear-gradient(135deg, #b71c1c, #a01818);
         }
         
         /* زر تحميل PDF */
@@ -700,6 +714,47 @@
             padding: 40px;
             font-family: 'Cairo', 'Tajawal', sans-serif;
         }
+        
+        /* عناصر إضافية */
+        .info-box {
+            background: linear-gradient(135deg, #f5f5dc, #e8e8d0);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-right: 5px solid var(--primary-color);
+            font-family: var(--font-body);
+        }
+        
+        .info-box h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        /* تحسينات للأقسام */
+        .form-section {
+            background: linear-gradient(135deg, #fafafa, #f5f5f5);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #e8e8d0;
+        }
+        
+        /* تأثيرات hover إضافية */
+        .btn:hover, .tab:hover, .counter:hover {
+            box-shadow: 0 6px 12px rgba(85, 107, 47, 0.15);
+        }
+        
+        /* لون الروابط */
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        a:hover {
+            color: var(--olive-dark);
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -761,7 +816,7 @@
             </div>
             
             <!-- قائمة الطلاب لتسجيل الحضور -->
-            <h3 style="margin-bottom: 20px; color: #555;">سجل حضور الطلاب لهذا اليوم:</h3>
+            <h3 style="margin-bottom: 20px; color: var(--olive-dark);">سجل حضور الطلاب لهذا اليوم:</h3>
             
             <div class="table-container">
                 <table id="attendance-table">
@@ -790,8 +845,8 @@
             <h2 class="section-title">إدارة الطلاب</h2>
             
             <!-- نموذج إضافة طالب جديد -->
-            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 20px; color: #555;">إضافة طالب جديد</h3>
+            <div class="form-section">
+                <h3 style="margin-bottom: 20px; color: var(--olive-dark);">إضافة طالب جديد</h3>
                 <form id="add-student-form">
                     <div class="form-group">
                         <label for="student-name">اسم الطالب *</label>
@@ -822,7 +877,7 @@
             </div>
             
             <!-- قائمة الطلاب -->
-            <h3 style="margin-bottom: 20px; color: #555;">قائمة الطلاب المسجلين</h3>
+            <h3 style="margin-bottom: 20px; color: var(--olive-dark);">قائمة الطلاب المسجلين</h3>
             
             <div class="table-container">
                 <table id="students-table">
@@ -852,8 +907,8 @@
             <h2 class="section-title">التقارير والتصدير</h2>
             
             <!-- خيارات التقرير -->
-            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 20px; color: #555;">إنشاء تقرير الحضور</h3>
+            <div class="form-section">
+                <h3 style="margin-bottom: 20px; color: var(--olive-dark);">إنشاء تقرير الحضور</h3>
                 
                 <div class="form-group">
                     <label for="report-date">اختر تاريخ التقرير</label>
@@ -879,7 +934,7 @@
             
             <!-- عرض التقرير -->
             <div id="report-results" class="report-section" style="display: none;">
-                <h3 style="margin-bottom: 20px; color: #555;" id="report-title">تقرير الحضور</h3>
+                <h3 style="margin-bottom: 20px; color: var(--olive-dark);" id="report-title">تقرير الحضور</h3>
                 
                 <!-- إحصائيات التقرير -->
                 <div class="counters" id="report-counters">
@@ -909,7 +964,7 @@
                 
                 <!-- قوائم الغائبين والمتأخرين -->
                 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 30px;">
-                    <div style="flex: 1; min-width: 300px; background: #ffebee; padding: 20px; border-radius: 8px;">
+                    <div style="flex: 1; min-width: 300px; background: #ffebee; padding: 20px; border-radius: 8px; border-right: 5px solid var(--danger-color);">
                         <h4 style="color: var(--danger-color); margin-bottom: 15px;">
                             قائمة الغائبين
                         </h4>
@@ -918,7 +973,7 @@
                         </ul>
                     </div>
                     
-                    <div style="flex: 1; min-width: 300px; background: #fff3e0; padding: 20px; border-radius: 8px;">
+                    <div style="flex: 1; min-width: 300px; background: #fff3e0; padding: 20px; border-radius: 8px; border-right: 5px solid var(--warning-color);">
                         <h4 style="color: var(--warning-color); margin-bottom: 15px;">
                             قائمة المتأخرين
                         </h4>
@@ -930,7 +985,7 @@
             </div>
             
             <!-- معلومات عن التخزين -->
-            <div style="margin-top: 40px; padding: 20px; background: #e8f4fd; border-radius: 8px; border-right: 5px solid var(--primary-color);">
+            <div class="info-box">
                 <h4 style="color: var(--primary-color); margin-bottom: 10px;">
                     معلومات عن التخزين
                 </h4>
@@ -1500,10 +1555,10 @@
         }
 
         // ============================================
-        // دالات إنشاء PDF باستخدام html2pdf.js
+        // دالات إنشاء PDF محسنة
         // ============================================
 
-        // إنشاء محتوى HTML لملف PDF
+        // إنشاء محتوى HTML لملف PDF بدقة عالية
         function createPDFContent(date) {
             const reportDate = date || appData.currentDate;
             const attendanceData = appData.attendance[reportDate] || {};
@@ -1515,10 +1570,12 @@
                 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
             ];
             
-            const formattedDate = `${reportDateObj.getDate()} ${arabicMonths[reportDateObj.getMonth()]} ${reportDateObj.getFullYear()}`;
+            const dayNames = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const dayName = dayNames[reportDateObj.getDay()];
+            const formattedDate = `${dayName}، ${reportDateObj.getDate()} ${arabicMonths[reportDateObj.getMonth()]} ${reportDateObj.getFullYear()}`;
             
             // حساب الإحصائيات
-            let presentCount = 0, absentCount = 0, lateCount = 0;
+            let presentCount = 0, absentCount = 0, lateCount = 0, totalCount = appData.students.length;
             const absentStudents = [], lateStudents = [];
             
             appData.students.forEach(student => {
@@ -1533,37 +1590,50 @@
                 }
             });
             
+            // حساب النسب المئوية
+            const presentPercent = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0;
+            const absentPercent = totalCount > 0 ? Math.round((absentCount / totalCount) * 100) : 0;
+            const latePercent = totalCount > 0 ? Math.round((lateCount / totalCount) * 100) : 0;
+            
             // إنشاء HTML للمحتوى
             let tableRows = '';
             appData.students.forEach((student, index) => {
                 const status = attendanceData[student.id] || 'unmarked';
-                let statusText = '', statusColor = '';
+                let statusText = '', statusColor = '', statusBg = '';
                 
                 switch(status) {
                     case 'present': 
                         statusText = 'حاضر';
-                        statusColor = '#4CAF50';
+                        statusColor = '#2E7D32';
+                        statusBg = '#E8F5E9';
                         break;
                     case 'absent': 
                         statusText = 'غائب';
-                        statusColor = '#f44336';
+                        statusColor = '#C62828';
+                        statusBg = '#FFEBEE';
                         break;
                     case 'late': 
                         statusText = 'متأخر';
-                        statusColor = '#ff9800';
+                        statusColor = '#EF6C00';
+                        statusBg = '#FFF3E0';
                         break;
                     default: 
                         statusText = 'لم يتم التسجيل';
-                        statusColor = '#999999';
+                        statusColor = '#757575';
+                        statusBg = '#F5F5F5';
                 }
                 
                 tableRows += `
-                    <tr>
-                        <td style="text-align: center; padding: 8px;">${index + 1}</td>
-                        <td style="text-align: right; padding: 8px;">${student.name}</td>
-                        <td style="text-align: right; padding: 8px;">${student.class}</td>
-                        <td style="text-align: right; padding: 8px;">${student.id || '-'}</td>
-                        <td style="text-align: center; padding: 8px; color: ${statusColor}; font-weight: bold;">${statusText}</td>
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td style="text-align: center; padding: 10px; font-weight: bold; border-right: 1px solid #e0e0e0;">${index + 1}</td>
+                        <td style="text-align: right; padding: 10px; border-right: 1px solid #e0e0e0;">${student.name}</td>
+                        <td style="text-align: right; padding: 10px; border-right: 1px solid #e0e0e0;">${student.class}</td>
+                        <td style="text-align: right; padding: 10px; border-right: 1px solid #e0e0e0;">${student.id || '-'}</td>
+                        <td style="text-align: center; padding: 10px;">
+                            <span style="display: inline-block; padding: 4px 12px; border-radius: 4px; background-color: ${statusBg}; color: ${statusColor}; font-weight: bold; font-size: 14px;">
+                                ${statusText}
+                            </span>
+                        </td>
                     </tr>
                 `;
             });
@@ -1571,55 +1641,66 @@
             let absentListHTML = '';
             if (absentStudents.length > 0) {
                 absentStudents.forEach((student, index) => {
-                    absentListHTML += `<div style="margin-bottom: 5px;">${index + 1}. ${student.name} - ${student.class}</div>`;
+                    absentListHTML += `<div style="margin-bottom: 8px; padding: 5px 10px; background: #f8f8f8; border-radius: 4px;">${index + 1}. ${student.name} - ${student.class}</div>`;
                 });
             } else {
-                absentListHTML = '<div>لا يوجد غائبين</div>';
+                absentListHTML = '<div style="text-align: center; color: #757575; font-style: italic; padding: 20px;">لا يوجد غائبين</div>';
             }
             
             let lateListHTML = '';
             if (lateStudents.length > 0) {
                 lateStudents.forEach((student, index) => {
-                    lateListHTML += `<div style="margin-bottom: 5px;">${index + 1}. ${student.name} - ${student.class}</div>`;
+                    lateListHTML += `<div style="margin-bottom: 8px; padding: 5px 10px; background: #f8f8f8; border-radius: 4px;">${index + 1}. ${student.name} - ${student.class}</div>`;
                 });
             } else {
-                lateListHTML = '<div>لا يوجد متأخرين</div>';
+                lateListHTML = '<div style="text-align: center; color: #757575; font-style: italic; padding: 20px;">لا يوجد متأخرين</div>';
             }
             
             return `
-                <div id="pdf-content" style="font-family: 'Cairo', 'Tajawal', sans-serif; direction: rtl; padding: 20px; max-width: 100%;">
-                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2c5aa0; padding-bottom: 15px;">
-                        <h1 style="color: #2c5aa0; margin-bottom: 10px; font-size: 28px;">تقرير حضور الطلاب</h1>
-                        <div style="font-size: 16px; color: #555;">
-                            <div>التاريخ: ${formattedDate}</div>
+                <div id="pdf-content" style="font-family: 'Cairo', 'Tajawal', sans-serif; direction: rtl; padding: 25px; max-width: 100%; background: white; line-height: 1.6;">
+                    <!-- العنوان الرئيسي -->
+                    <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #556B2F;">
+                        <h1 style="color: #556B2F; margin-bottom: 5px; font-size: 28px; font-weight: 800;">تقرير حضور الطلاب</h1>
+                        <div style="font-size: 18px; color: #555; margin-bottom: 10px;">
+                            <div style="font-weight: bold;">${formattedDate}</div>
+                        </div>
+                        <div style="font-size: 16px; color: #777; background: #f5f5dc; padding: 8px 15px; border-radius: 5px; display: inline-block;">
+                            إجمالي الطلاب: ${totalCount} طالب
                         </div>
                     </div>
                     
-                    <div style="display: flex; justify-content: space-around; margin-bottom: 30px; text-align: center;">
-                        <div style="flex: 1; padding: 15px; background: #e8f5e9; border-radius: 10px; margin: 0 10px;">
-                            <div style="font-size: 32px; color: #4CAF50; font-weight: bold;">${presentCount}</div>
-                            <div style="font-size: 18px; color: #555;">الحاضرون</div>
+                    <!-- إحصائيات سريعة -->
+                    <div style="display: flex; justify-content: space-around; margin-bottom: 40px; text-align: center; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 180px; padding: 20px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 12px; margin: 0 10px; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.1);">
+                            <div style="font-size: 36px; color: #2E7D32; font-weight: bold; margin-bottom: 8px;">${presentCount}</div>
+                            <div style="font-size: 16px; color: #555; margin-bottom: 5px;">الحاضرون</div>
+                            <div style="font-size: 14px; color: #2E7D32; font-weight: bold;">${presentPercent}%</div>
                         </div>
-                        <div style="flex: 1; padding: 15px; background: #ffebee; border-radius: 10px; margin: 0 10px;">
-                            <div style="font-size: 32px; color: #f44336; font-weight: bold;">${absentCount}</div>
-                            <div style="font-size: 18px; color: #555;">الغائبون</div>
+                        <div style="flex: 1; min-width: 180px; padding: 20px; background: linear-gradient(135deg, #FFEBEE, #FFCDD2); border-radius: 12px; margin: 0 10px; box-shadow: 0 4px 12px rgba(198, 40, 40, 0.1);">
+                            <div style="font-size: 36px; color: #C62828; font-weight: bold; margin-bottom: 8px;">${absentCount}</div>
+                            <div style="font-size: 16px; color: #555; margin-bottom: 5px;">الغائبون</div>
+                            <div style="font-size: 14px; color: #C62828; font-weight: bold;">${absentPercent}%</div>
                         </div>
-                        <div style="flex: 1; padding: 15px; background: #fff3e0; border-radius: 10px; margin: 0 10px;">
-                            <div style="font-size: 32px; color: #ff9800; font-weight: bold;">${lateCount}</div>
-                            <div style="font-size: 18px; color: #555;">المتأخرون</div>
+                        <div style="flex: 1; min-width: 180px; padding: 20px; background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-radius: 12px; margin: 0 10px; box-shadow: 0 4px 12px rgba(239, 108, 0, 0.1);">
+                            <div style="font-size: 36px; color: #EF6C00; font-weight: bold; margin-bottom: 8px;">${lateCount}</div>
+                            <div style="font-size: 16px; color: #555; margin-bottom: 5px;">المتأخرون</div>
+                            <div style="font-size: 14px; color: #EF6C00; font-weight: bold;">${latePercent}%</div>
                         </div>
                     </div>
                     
-                    <h2 style="color: #2c5aa0; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">تفاصيل حضور الطلاب</h2>
+                    <!-- تفاصيل الحضور -->
+                    <h2 style="color: #556B2F; border-bottom: 2px solid #556B2F; padding-bottom: 12px; margin-bottom: 25px; font-size: 22px;">
+                        تفاصيل حضور الطلاب
+                    </h2>
                     
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
                         <thead>
-                            <tr style="background-color: #f0f5ff; color: #2c5aa0;">
-                                <th style="padding: 12px; text-align: center; border: 1px solid #ddd; width: 50px;">م</th>
-                                <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">اسم الطالب</th>
-                                <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">الصف / الشعبة</th>
-                                <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">رقم الهوية</th>
-                                <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">حالة الحضور</th>
+                            <tr style="background-color: #556B2F; color: white;">
+                                <th style="padding: 14px; text-align: center; border-left: 1px solid rgba(255,255,255,0.2); width: 60px;">م</th>
+                                <th style="padding: 14px; text-align: right; border-left: 1px solid rgba(255,255,255,0.2);">اسم الطالب</th>
+                                <th style="padding: 14px; text-align: right; border-left: 1px solid rgba(255,255,255,0.2);">الصف / الشعبة</th>
+                                <th style="padding: 14px; text-align: right; border-left: 1px solid rgba(255,255,255,0.2);">رقم الهوية</th>
+                                <th style="padding: 14px; text-align: center;">حالة الحضور</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1627,26 +1708,41 @@
                         </tbody>
                     </table>
                     
-                    <div style="display: flex; margin-top: 30px; gap: 20px;">
-                        <div style="flex: 1; padding: 20px; background: #ffebee; border-radius: 8px;">
-                            <h3 style="color: #f44336; margin-bottom: 15px;">قائمة الغائبين</h3>
+                    <!-- القوائم التفصيلية -->
+                    <div style="display: flex; margin-top: 30px; gap: 25px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 300px; padding: 25px; background: #FFF8F8; border-radius: 12px; border-right: 5px solid #C62828; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <h3 style="color: #C62828; margin-bottom: 20px; font-size: 20px; padding-bottom: 10px; border-bottom: 1px solid #FFCDD2;">
+                                <span style="background: #C62828; color: white; padding: 5px 12px; border-radius: 4px; margin-left: 10px;">${absentCount}</span>
+                                قائمة الغائبين
+                            </h3>
                             ${absentListHTML}
                         </div>
-                        <div style="flex: 1; padding: 20px; background: #fff3e0; border-radius: 8px;">
-                            <h3 style="color: #ff9800; margin-bottom: 15px;">قائمة المتأخرين</h3>
+                        
+                        <div style="flex: 1; min-width: 300px; padding: 25px; background: #FFFBF0; border-radius: 12px; border-right: 5px solid #EF6C00; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <h3 style="color: #EF6C00; margin-bottom: 20px; font-size: 20px; padding-bottom: 10px; border-bottom: 1px solid #FFE0B2;">
+                                <span style="background: #EF6C00; color: white; padding: 5px 12px; border-radius: 4px; margin-left: 10px;">${lateCount}</span>
+                                قائمة المتأخرين
+                            </h3>
                             ${lateListHTML}
                         </div>
                     </div>
                     
-                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #777; font-size: 14px;">
-                        <div>تم إنشاء هذا التقرير بواسطة منصة "نرصد" لإدارة حضور الطلاب</div>
-                        <div>تاريخ الإنشاء: ${new Date().toLocaleDateString('ar-SA')}</div>
+                    <!-- تذييل التقرير -->
+                    <div style="margin-top: 50px; padding-top: 25px; border-top: 2px dashed #ddd; text-align: center; color: #666; font-size: 15px;">
+                        <div style="margin-bottom: 10px; font-weight: bold; color: #556B2F;">تم إنشاء هذا التقرير بواسطة منصة "نرصد" لإدارة حضور الطلاب</div>
+                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 15px; flex-wrap: wrap;">
+                            <div>تاريخ الإنشاء: ${new Date().toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            <div>وقت الإنشاء: ${new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}</div>
+                        </div>
+                        <div style="margin-top: 20px; font-size: 13px; color: #888; background: #f9f9f9; padding: 12px; border-radius: 6px;">
+                            هذا التقرير تم إنشاؤه تلقائياً. جميع البيانات مستمدة من سجلات الحضور اليومية للنظام.
+                        </div>
                     </div>
                 </div>
             `;
         }
 
-        // دالة تصدير PDF باستخدام html2pdf.js
+        // دالة تصدير PDF بدقة عالية
         async function exportToPDF(date) {
             try {
                 const reportDate = date || appData.currentDate;
@@ -1672,29 +1768,64 @@
                 const pdfContainer = document.getElementById('pdf-content');
                 pdfContainer.innerHTML = pdfContent;
                 
-                // خيارات html2pdf
+                // خيارات html2pdf محسنة للدقة العالية
                 const opt = {
-                    margin: [10, 10, 10, 10],
+                    margin: [15, 15, 15, 15],
                     filename: `تقرير_حضور_${reportDate}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
+                    image: { 
+                        type: 'jpeg', 
+                        quality: 1.0,
+                        compression: 'NONE'
+                    },
                     html2canvas: { 
-                        scale: 2,
+                        scale: 3, // زيادة الدقة
                         useCORS: true,
                         letterRendering: true,
                         allowTaint: true,
-                        backgroundColor: '#FFFFFF'
+                        backgroundColor: '#FFFFFF',
+                        logging: false,
+                        removeContainer: true,
+                        windowWidth: 794, // A4 width in pixels at 96 DPI
+                        x: 0,
+                        y: 0,
+                        scrollX: 0,
+                        scrollY: 0,
+                        width: 794,
+                        height: pdfContainer.scrollHeight,
+                        foreignObjectRendering: false
                     },
                     jsPDF: { 
                         unit: 'mm', 
                         format: 'a4', 
                         orientation: 'portrait',
-                        compress: true
+                        compress: false, // تعطيل الضغط للحفاظ على الجودة
+                        hotfixes: ['px_scaling']
                     },
-                    pagebreak: { mode: 'avoid-all' }
+                    pagebreak: { 
+                        mode: ['avoid-all', 'css', 'legacy'],
+                        after: '.pagebreak'
+                    },
+                    enableLinks: false
                 };
                 
+                // إنشاء ملف PDF
+                const pdfWorker = html2pdf().set(opt);
+                
+                // معالجة الصفحات المتعددة
+                const pageHeight = 1122; // A4 height in pixels at 96 DPI
+                const contentHeight = pdfContainer.scrollHeight;
+                
+                if (contentHeight > pageHeight) {
+                    // إضافة فواصل صفحات تلقائية
+                    const elements = pdfContainer.querySelectorAll('h2, table, .pagebreak');
+                    elements.forEach(el => {
+                        el.style.pageBreakInside = 'avoid';
+                        el.style.breakInside = 'avoid';
+                    });
+                }
+                
                 // تحويل وعرض PDF
-                await html2pdf().set(opt).from(pdfContent).save();
+                await pdfWorker.from(pdfContent).save();
                 
                 // استعادة حالة زر التصدير
                 setTimeout(() => {
@@ -1703,7 +1834,7 @@
                     exportBtn.disabled = false;
                 }, 1000);
                 
-                showMessage('تم تصدير التقرير كملف PDF بنجاح', 'success');
+                showMessage('تم تصدير التقرير كملف PDF عالي الدقة بنجاح', 'success');
                 
             } catch (error) {
                 console.error('خطأ في تصدير تقرير PDF:', error);
@@ -1740,25 +1871,84 @@
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>طباعة تقرير الحضور</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Cairo&family=Tajawal&display=swap" rel="stylesheet">
+                    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
                     <style>
-                        body { font-family: 'Cairo', 'Tajawal', sans-serif; direction: rtl; padding: 20px; }
                         @media print {
-                            body { margin: 0; padding: 10px; }
-                            .no-print { display: none; }
+                            @page {
+                                size: A4;
+                                margin: 15mm;
+                            }
+                            body { 
+                                font-family: 'Cairo', 'Tajawal', sans-serif; 
+                                direction: rtl; 
+                                padding: 0; 
+                                margin: 0;
+                                -webkit-print-color-adjust: exact !important;
+                                print-color-adjust: exact !important;
+                            }
+                            .no-print { display: none !important; }
+                            table { page-break-inside: avoid; }
+                            h1, h2, h3 { page-break-after: avoid; }
+                            .pagebreak { page-break-before: always; }
+                        }
+                        @media screen {
+                            body { 
+                                font-family: 'Cairo', 'Tajawal', sans-serif; 
+                                direction: rtl; 
+                                padding: 20px; 
+                                background: #f5f5f5;
+                            }
+                        }
+                        .print-controls {
+                            position: fixed;
+                            top: 20px;
+                            left: 20px;
+                            z-index: 1000;
+                            background: white;
+                            padding: 15px;
+                            border-radius: 8px;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                        }
+                        .print-btn {
+                            padding: 10px 20px;
+                            background: #556B2F;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            font-family: 'Cairo';
+                            font-weight: bold;
+                            margin: 5px;
+                        }
+                        .print-btn:hover {
+                            background: #2F4F2F;
+                        }
+                        .close-btn {
+                            background: #f44336;
+                        }
+                        .close-btn:hover {
+                            background: #d32f2f;
                         }
                     </style>
                 </head>
                 <body>
                     ${pdfContent}
-                    <div class="no-print" style="text-align: center; margin-top: 30px;">
-                        <button onclick="window.print()" style="padding: 10px 20px; background: #2c5aa0; color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Cairo';">طباعة</button>
-                        <button onclick="window.close()" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px; font-family: 'Cairo';">إغلاق</button>
+                    <div class="no-print print-controls">
+                        <button onclick="window.print()" class="print-btn">🖨️ طباعة</button>
+                        <button onclick="window.close()" class="print-btn close-btn">✖ إغلاق</button>
                     </div>
                 </body>
                 </html>
             `);
             printWindow.document.close();
+            
+            // تحميل الخطوط قبل الطباعة
+            printWindow.onload = function() {
+                // انتظار تحميل الخطوط
+                setTimeout(() => {
+                    printWindow.focus();
+                }, 500);
+            };
         }
 
         // تنسيق التاريخ
