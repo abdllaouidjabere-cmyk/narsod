@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نرصد - إدارة حضور الطلاب</title>
+    
+    <!-- مكتبة html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- خطوط عربية من Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* أنماط عامة */
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #4a90e2;
+            --success-color: #4CAF50;
+            --danger-color: #f44336;
+            --warning-color: #ff9800;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #ddd;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            
+            /* خطوط مخصصة */
+            --font-heading: 'Cairo', 'Tajawal', sans-serif;
+            --font-body: 'Tajawal', 'Cairo', sans-serif;
+            --font-arabic: 'Amiri', 'Cairo', 'Tajawal', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 40px;
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* رأس الصفحة */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            font-family: var(--font-heading);
+        }
+
+        .logo {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        /* التبويبات */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 0;
+            font-family: var(--font-heading);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 18px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.15rem;
+            transition: var(--transition);
+            border-bottom: 4px solid transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .tab:hover {
+            background-color: #f0f5ff;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 4px solid var(--primary-color);
+            background-color: #f0f5ff;
+        }
+
+        /* محتوى التبويبات */
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            font-family: var(--font-body);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            font-size: 1.7rem;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* النماذج */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1.05rem;
+            transition: var(--transition);
+            font-family: var(--font-body);
+            font-weight: 400;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 700;
+            transition: var(--transition);
+            text-align: center;
+            font-family: var(--font-heading);
+            letter-spacing: -0.3px;
+        }
+
+        .btn:hover {
+            background-color: #1e4a8a;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #3d8b40;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+
+        .btn-warning:hover {
+            background-color: #e68900;
+        }
+
+        .btn-sm {
+            padding: 10px 18px;
+            font-size: 0.95rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* الجداول */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-family: var(--font-body);
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.05rem;
+        }
+
+        th {
+            background-color: #f0f5ff;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.15rem;
+            font-family: var(--font-body);
+        }
+
+        /* أزرار الحضور */
+        .attendance-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .attendance-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+        }
+
+        .present-btn {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+
+        .present-btn:hover, .present-btn.active {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .absent-btn {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+
+        .absent-btn:hover, .absent-btn.active {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .late-btn {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+
+        .late-btn:hover, .late-btn.active {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        /* العدادات */
+        .counters {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-family: var(--font-heading);
+        }
+
+        .counter {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .counter:hover {
+            transform: translateY(-5px);
+        }
+
+        .counter h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .counter-value {
+            font-size: 3.2rem;
+            font-weight: 800;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .present-counter {
+            border-top: 5px solid var(--success-color);
+        }
+
+        .absent-counter {
+            border-top: 5px solid var(--danger-color);
+        }
+
+        .late-counter {
+            border-top: 5px solid var(--warning-color);
+        }
+
+        /* التنبيهات */
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 5px solid #ffc107;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-left: 5px solid #17a2b8;
+        }
+
+        /* التاريخ اليوم */
+        .today-date {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--primary-color);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+        }
+
+        /* التقارير */
+        .report-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+            font-family: var(--font-body);
+        }
+
+        .report-table {
+            margin-top: 20px;
+        }
+
+        /* تذييل الصفحة */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 1rem;
+            border-top: 1px solid var(--border-color);
+            font-family: var(--font-body);
+        }
+
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            body {
+                font-size: 15px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .counters {
+                flex-direction: column;
+            }
+            
+            .counter {
+                min-width: 100%;
+            }
+            
+            .table-container {
+                font-size: 0.95rem;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.95rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .attendance-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .counter-value {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+            
+            .counter-value {
+                font-size: 2.5rem;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* حالة الحضور في الجدول */
+        .status-present {
+            color: var(--success-color);
+            font-weight: 700;
+            font-family: var(--font-heading);
+        }
+        
+        .status-absent {
+            color: var(--danger-color);
+            font-weight: 700;
+            font-family: var(--font-heading);
+        }
+        
+        .status-late {
+            color: var(--warning-color);
+            font-weight: 700;
+            font-family: var(--font-heading);
+        }
+        
+        .status-unmarked {
+            color: #999;
+            font-style: italic;
+            font-family: var(--font-body);
+        }
+        
+        /* رسالة نجاح/خطأ */
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 28px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 700;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+        }
+        
+        .message-success {
+            background-color: var(--success-color);
+        }
+        
+        .message-error {
+            background-color: var(--danger-color);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+        
+        /* رموز بسيطة */
+        .bullet {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+        
+        .bullet-present {
+            background-color: var(--success-color);
+        }
+        
+        .bullet-absent {
+            background-color: var(--danger-color);
+        }
+        
+        .bullet-late {
+            background-color: var(--warning-color);
+        }
+        
+        .bullet-unmarked {
+            background-color: #999;
+        }
+        
+        /* تخصيص خط الأرقام */
+        .number-font {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            font-weight: 700;
+        }
+        
+        /* تحسينات للزر الجديد */
+        .btn-pdf {
+            background-color: #d32f2f;
+        }
+        
+        .btn-pdf:hover {
+            background-color: #b71c1c;
+        }
+        
+        /* زر تحميل PDF */
+        .btn-pdf-loading {
+            position: relative;
+            color: transparent !important;
+        }
+        
+        .btn-pdf-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* تحسينات إضافية */
+        .student-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .status-present-badge {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+        
+        .status-absent-badge {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+        
+        .status-late-badge {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+        
+        .status-unmarked-badge {
+            background-color: #f5f5f5;
+            color: #999;
+        }
+        
+        /* تنسيقات خاصة للـ PDF */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #pdf-content, #pdf-content * {
+                visibility: visible;
+            }
+            #pdf-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                font-family: 'Cairo', 'Tajawal', sans-serif !important;
+            }
+        }
+        
+        /* عنصر مخفي لعرض PDF */
+        #pdf-container {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 800px;
+            background: white;
+            padding: 40px;
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- رأس الصفحة -->
+    <header>
+        <div class="container">
+            <div class="logo">نرصد</div>
+            <p class="subtitle">منصة إدارة حضور وغياب الطلاب في المؤسسات التعليمية</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- تبويبات التنقل -->
+        <div class="tabs">
+            <div class="tab active" data-tab="attendance">تسجيل الحضور اليومي</div>
+            <div class="tab" data-tab="students">إدارة الطلاب</div>
+            <div class="tab" data-tab="reports">التقارير والتصدير</div>
+        </div>
+
+        <!-- محتوى تبويب تسجيل الحضور -->
+        <div id="attendance" class="tab-content active">
+            <h2 class="section-title">تسجيل الحضور اليومي</h2>
+            
+            <!-- تاريخ اليوم -->
+            <div class="today-date">
+                <span id="current-date">يتم تحميل التاريخ...</span>
+            </div>
+            
+            <!-- تنبيه إذا لم يتم تسجيل جميع الطلاب -->
+            <div id="attendance-alert" class="alert alert-warning" style="display: none;">
+                <span>!</span>
+                <span>يوجد طلاب لم يتم تسجيل حضورهم بعد. الرجاء تعبئة جميع الحالات قبل إنشاء التقرير.</span>
+            </div>
+            
+            <!-- عدادات الإحصائيات -->
+            <div class="counters">
+                <div class="counter present-counter">
+                    <h3>الحاضرون</h3>
+                    <div class="counter-value" id="present-count">0</div>
+                </div>
+                <div class="counter absent-counter">
+                    <h3>الغائبون</h3>
+                    <div class="counter-value" id="absent-count">0</div>
+                </div>
+                <div class="counter late-counter">
+                    <h3>المتأخرون</h3>
+                    <div class="counter-value" id="late-count">0</div>
+                </div>
+            </div>
+            
+            <!-- زر بدء يوم جديد -->
+            <div style="margin-bottom: 25px;">
+                <button id="new-day-btn" class="btn btn-warning">
+                    بدء يوم جديد
+                </button>
+                <p style="margin-top: 10px; color: #666; font-size: 0.95rem;">
+                    سيؤدي هذا الزر إلى مسح حالات الحضور لهذا اليوم مع الاحتفاظ بالسجلات السابقة.
+                </p>
+            </div>
+            
+            <!-- قائمة الطلاب لتسجيل الحضور -->
+            <h3 style="margin-bottom: 20px; color: #555;">سجل حضور الطلاب لهذا اليوم:</h3>
+            
+            <div class="table-container">
+                <table id="attendance-table">
+                    <thead>
+                        <tr>
+                            <th width="5%">م</th>
+                            <th width="25%">اسم الطالب</th>
+                            <th width="20%">الصف / الشعبة</th>
+                            <th width="20%">رقم الهوية</th>
+                            <th width="30%">حالة الحضور</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendance-table-body">
+                        <!-- سيتم ملء هذا الجدول بواسطة JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div id="no-students-msg" class="no-data">
+                    <p>لا يوجد طلاب مسجلين بعد. الرجاء إضافة الطلاب أولاً من تبويب "إدارة الطلاب".</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- محتوى تبويب إدارة الطلاب -->
+        <div id="students" class="tab-content">
+            <h2 class="section-title">إدارة الطلاب</h2>
+            
+            <!-- نموذج إضافة طالب جديد -->
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 30px;">
+                <h3 style="margin-bottom: 20px; color: #555;">إضافة طالب جديد</h3>
+                <form id="add-student-form">
+                    <div class="form-group">
+                        <label for="student-name">اسم الطالب *</label>
+                        <input type="text" id="student-name" placeholder="أدخل اسم الطالب الكامل" required>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 250px;">
+                            <label for="student-id">رقم الهوية / الأكاديمي</label>
+                            <input type="text" id="student-id" placeholder="اختياري">
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1; min-width: 250px;">
+                            <label for="student-class">الصف / الشعبة *</label>
+                            <input type="text" id="student-class" placeholder="مثال: الصف العاشر - شعبة أ" required>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button type="submit" class="btn">
+                            إضافة طالب
+                        </button>
+                        <button type="reset" class="btn btn-danger">
+                            مسح النموذج
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- قائمة الطلاب -->
+            <h3 style="margin-bottom: 20px; color: #555;">قائمة الطلاب المسجلين</h3>
+            
+            <div class="table-container">
+                <table id="students-table">
+                    <thead>
+                        <tr>
+                            <th width="5%">م</th>
+                            <th width="25%">اسم الطالب</th>
+                            <th width="20%">الصف / الشعبة</th>
+                            <th width="20%">رقم الهوية</th>
+                            <th width="15%">تاريخ الإضافة</th>
+                            <th width="15%">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table-body">
+                        <!-- سيتم ملء هذا الجدول بواسطة JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div id="empty-students-msg" class="no-data">
+                    <p>لا يوجد طلاب مسجلين بعد. استخدم النموذج أعلاه لإضافة الطلاب.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- محتوى تبويب التقارير -->
+        <div id="reports" class="tab-content">
+            <h2 class="section-title">التقارير والتصدير</h2>
+            
+            <!-- خيارات التقرير -->
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 30px;">
+                <h3 style="margin-bottom: 20px; color: #555;">إنشاء تقرير الحضور</h3>
+                
+                <div class="form-group">
+                    <label for="report-date">اختر تاريخ التقرير</label>
+                    <input type="date" id="report-date" value="">
+                </div>
+                
+                <div class="btn-group">
+                    <button id="generate-report-btn" class="btn">
+                        إنشاء التقرير
+                    </button>
+                    <button id="export-pdf-btn" class="btn btn-pdf">
+                        <span id="export-pdf-text">تصدير كملف PDF</span>
+                    </button>
+                    <button id="print-report-btn" class="btn btn-warning">
+                        طباعة التقرير
+                    </button>
+                </div>
+                
+                <p style="margin-top: 15px; color: #666; font-size: 0.95rem;">
+                    ملاحظة: إذا لم تختر تاريخًا محددًا، سيتم عرض تقرير اليوم الحالي.
+                </p>
+            </div>
+            
+            <!-- عرض التقرير -->
+            <div id="report-results" class="report-section" style="display: none;">
+                <h3 style="margin-bottom: 20px; color: #555;" id="report-title">تقرير الحضور</h3>
+                
+                <!-- إحصائيات التقرير -->
+                <div class="counters" id="report-counters">
+                    <!-- سيتم ملؤها بواسطة JavaScript -->
+                </div>
+                
+                <!-- تفاصيل التقرير -->
+                <div class="table-container report-table">
+                    <table id="report-table">
+                        <thead>
+                            <tr>
+                                <th>اسم الطالب</th>
+                                <th>الصف / الشعبة</th>
+                                <th>رقم الهوية</th>
+                                <th>حالة الحضور</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report-table-body">
+                            <!-- سيتم ملؤها بواسطة JavaScript -->
+                        </tbody>
+                    </table>
+                    
+                    <div id="no-report-data" class="no-data">
+                        لا توجد بيانات حضور للتاريخ المحدد.
+                    </div>
+                </div>
+                
+                <!-- قوائم الغائبين والمتأخرين -->
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 30px;">
+                    <div style="flex: 1; min-width: 300px; background: #ffebee; padding: 20px; border-radius: 8px;">
+                        <h4 style="color: var(--danger-color); margin-bottom: 15px;">
+                            قائمة الغائبين
+                        </h4>
+                        <ul id="absent-list" style="list-style-type: none; padding-right: 10px;">
+                            <!-- سيتم ملؤها بواسطة JavaScript -->
+                        </ul>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px; background: #fff3e0; padding: 20px; border-radius: 8px;">
+                        <h4 style="color: var(--warning-color); margin-bottom: 15px;">
+                            قائمة المتأخرين
+                        </h4>
+                        <ul id="late-list" style="list-style-type: none; padding-right: 10px;">
+                            <!-- سيتم ملؤها بواسطة JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- معلومات عن التخزين -->
+            <div style="margin-top: 40px; padding: 20px; background: #e8f4fd; border-radius: 8px; border-right: 5px solid var(--primary-color);">
+                <h4 style="color: var(--primary-color); margin-bottom: 10px;">
+                    معلومات عن التخزين
+                </h4>
+                <p>يتم حفظ جميع البيانات محليًا في متصفحك باستخدام تقنية LocalStorage. لن تفقد البيانات عند إغلاق المتصفح، ولكنها ستختفي إذا قمت بمسح بيانات التصفح.</p>
+                <button id="clear-data-btn" class="btn btn-danger btn-sm" style="margin-top: 15px;">
+                    مسح جميع البيانات
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- تذييل الصفحة -->
+    <footer class="container">
+        <p>منصة "نرصد" لإدارة حضور الطلاب - تم التطوير بواسطة فريق نرصد التعليمي</p>
+        <p>جميع الحقوق محفوظة &copy; <span id="current-year"></span></p>
+    </footer>
+
+    <!-- رسائل التنبيه -->
+    <div id="message-container"></div>
+
+    <!-- عنصر مخفي لتصدير PDF -->
+    <div id="pdf-container">
+        <div id="pdf-content"></div>
+    </div>
+
+    <!-- السكربت الرئيسي -->
+    <script>
+        // بيانات التطبيق
+        const appData = {
+            students: JSON.parse(localStorage.getItem('nrasad_students')) || [],
+            attendance: JSON.parse(localStorage.getItem('nrasad_attendance')) || {},
+            currentDate: new Date().toISOString().split('T')[0] // YYYY-MM-DD
+        };
+
+        // تهيئة التطبيق عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعيين السنة الحالية في التذييل
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // تعيين التاريخ الحالي
+            const dateElement = document.getElementById('current-date');
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('ar-SA', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            dateElement.textContent = formattedDate;
+            
+            // تعيين تاريخ اليوم في حقل اختيار تاريخ التقرير
+            document.getElementById('report-date').value = appData.currentDate;
+            
+            // تهيئة التبويبات
+            initTabs();
+            
+            // تحميل قائمة الطلاب
+            loadStudentsTable();
+            
+            // تحميل جدول الحضور
+            loadAttendanceTable();
+            
+            // تحديث العدادات
+            updateCounters();
+            
+            // إضافة معالج الأحداث للنماذج والأزرار
+            setupEventHandlers();
+            
+            // التحقق من وجود طلاب غير مسجل حضورهم
+            checkUnmarkedAttendance();
+        });
+
+        // تهيئة التبويبات
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // إزالة النشاط من جميع التبويبات والمحتويات
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // إضافة النشاط للتبويب والمحتوى المحدد
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // إذا كان التبويب هو تقارير، توليد تقرير اليوم الحالي
+                    if (tabId === 'reports') {
+                        generateReport(appData.currentDate);
+                    }
+                });
+            });
+        }
+
+        // تحميل جدول الطلاب
+        function loadStudentsTable() {
+            const tbody = document.getElementById('students-table-body');
+            const emptyMsg = document.getElementById('empty-students-msg');
+            
+            if (appData.students.length === 0) {
+                tbody.innerHTML = '';
+                emptyMsg.style.display = 'block';
+                return;
+            }
+            
+            emptyMsg.style.display = 'none';
+            
+            let html = '';
+            appData.students.forEach((student, index) => {
+                html += `
+                    <tr>
+                        <td class="number-font">${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>${student.class}</td>
+                        <td>${student.id || '-'}</td>
+                        <td>${student.addedDate || formatDate(new Date())}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm delete-student-btn" data-id="${student.id}">
+                                حذف
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+            
+            // إضافة معالجات الأحداث لأزرار الحذف
+            document.querySelectorAll('.delete-student-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const studentId = this.getAttribute('data-id');
+                    deleteStudent(studentId);
+                });
+            });
+        }
+
+        // تحميل جدول الحضور
+        function loadAttendanceTable() {
+            const tbody = document.getElementById('attendance-table-body');
+            const noStudentsMsg = document.getElementById('no-students-msg');
+            
+            if (appData.students.length === 0) {
+                tbody.innerHTML = '';
+                noStudentsMsg.style.display = 'block';
+                return;
+            }
+            
+            noStudentsMsg.style.display = 'none';
+            
+            // الحصول على سجل الحضور لليوم الحالي
+            const todayAttendance = appData.attendance[appData.currentDate] || {};
+            
+            let html = '';
+            appData.students.forEach((student, index) => {
+                const studentAttendance = todayAttendance[student.id] || 'unmarked';
+                const statusClass = getStatusClass(studentAttendance);
+                const statusText = getStatusText(studentAttendance);
+                
+                html += `
+                    <tr>
+                        <td class="number-font">${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>${student.class}</td>
+                        <td>${student.id || '-'}</td>
+                        <td>
+                            <div class="attendance-buttons" data-student-id="${student.id}">
+                                <button class="attendance-btn present-btn ${studentAttendance === 'present' ? 'active' : ''}" data-status="present">
+                                    حاضر
+                                </button>
+                                <button class="attendance-btn absent-btn ${studentAttendance === 'absent' ? 'active' : ''}" data-status="absent">
+                                    غائب
+                                </button>
+                                <button class="attendance-btn late-btn ${studentAttendance === 'late' ? 'active' : ''}" data-status="late">
+                                    متأخر
+                                </button>
+                            </div>
+                            <div class="status-${statusClass}" style="margin-top: 8px; font-size: 0.95rem;">
+                                <span class="bullet bullet-${statusClass}"></span> ${statusText}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+            
+            // إضافة معالجات الأحداث لأزرار الحضور
+            document.querySelectorAll('.attendance-buttons').forEach(btnGroup => {
+                const studentId = btnGroup.getAttribute('data-student-id');
+                const buttons = btnGroup.querySelectorAll('.attendance-btn');
+                
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const status = this.getAttribute('data-status');
+                        
+                        // تحديث حالة النشاط للأزرار
+                        buttons.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // تحديث حالة الحضور
+                        updateAttendance(studentId, status);
+                    });
+                });
+            });
+            
+            // التحقق من وجود طلاب غير مسجل حضورهم
+            checkUnmarkedAttendance();
+        }
+
+        // تحديث حالة الحضور
+        function updateAttendance(studentId, status) {
+            // التأكد من وجود سجل الحضور لليوم الحالي
+            if (!appData.attendance[appData.currentDate]) {
+                appData.attendance[appData.currentDate] = {};
+            }
+            
+            // تحديث حالة الحضور للطالب
+            appData.attendance[appData.currentDate][studentId] = status;
+            
+            // حفظ البيانات في LocalStorage
+            localStorage.setItem('nrasad_attendance', JSON.stringify(appData.attendance));
+            
+            // تحديث العدادات
+            updateCounters();
+            
+            // تحديث عرض الحالة في الجدول
+            updateAttendanceStatusDisplay(studentId, status);
+            
+            // التحقق من وجود طلاب غير مسجل حضورهم
+            checkUnmarkedAttendance();
+            
+            // عرض رسالة نجاح
+            showMessage('تم تحديث حالة الحضور بنجاح', 'success');
+        }
+
+        // تحديث عرض حالة الحضور
+        function updateAttendanceStatusDisplay(studentId, status) {
+            const btnGroup = document.querySelector(`.attendance-buttons[data-student-id="${studentId}"]`);
+            if (!btnGroup) return;
+            
+            const statusContainer = btnGroup.nextElementSibling;
+            const statusClass = getStatusClass(status);
+            const statusText = getStatusText(status);
+            
+            statusContainer.className = `status-${statusClass}`;
+            statusContainer.style.marginTop = '8px';
+            statusContainer.style.fontSize = '0.95rem';
+            statusContainer.innerHTML = `<span class="bullet bullet-${statusClass}"></span> ${statusText}`;
+        }
+
+        // الحصول على فئة الحالة
+        function getStatusClass(status) {
+            switch(status) {
+                case 'present': return 'present';
+                case 'absent': return 'absent';
+                case 'late': return 'late';
+                default: return 'unmarked';
+            }
+        }
+
+        // الحصول على نص الحالة
+        function getStatusText(status) {
+            switch(status) {
+                case 'present': return 'حاضر';
+                case 'absent': return 'غائب';
+                case 'late': return 'متأخر';
+                default: return 'لم يتم التسجيل بعد';
+            }
+        }
+
+        // تحديث العدادات
+        function updateCounters() {
+            const todayAttendance = appData.attendance[appData.currentDate] || {};
+            
+            let presentCount = 0;
+            let absentCount = 0;
+            let lateCount = 0;
+            
+            // عد الحالات المختلفة
+            Object.values(todayAttendance).forEach(status => {
+                if (status === 'present') presentCount++;
+                else if (status === 'absent') absentCount++;
+                else if (status === 'late') lateCount++;
+            });
+            
+            // تحديث العرض
+            document.getElementById('present-count').textContent = presentCount;
+            document.getElementById('absent-count').textContent = absentCount;
+            document.getElementById('late-count').textContent = lateCount;
+        }
+
+        // التحقق من وجود طلاب غير مسجل حضورهم
+        function checkUnmarkedAttendance() {
+            const todayAttendance = appData.attendance[appData.currentDate] || {};
+            const totalStudents = appData.students.length;
+            const markedStudents = Object.keys(todayAttendance).length;
+            
+            const alertElement = document.getElementById('attendance-alert');
+            
+            if (markedStudents < totalStudents && totalStudents > 0) {
+                alertElement.style.display = 'flex';
+            } else {
+                alertElement.style.display = 'none';
+            }
+        }
+
+        // إعداد معالجات الأحداث
+        function setupEventHandlers() {
+            // نموذج إضافة طالب جديد
+            document.getElementById('add-student-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('student-name').value.trim();
+                const id = document.getElementById('student-id').value.trim();
+                const studentClass = document.getElementById('student-class').value.trim();
+                
+                if (!name || !studentClass) {
+                    showMessage('الرجاء تعبئة جميع الحقول الإلزامية', 'error');
+                    return;
+                }
+                
+                // إنشاء معرف فريد للطالب إذا لم يتم تقديمه
+                const studentId = id || 'STD-' + Date.now();
+                
+                // إضافة الطالب إلى القائمة
+                const newStudent = {
+                    id: studentId,
+                    name: name,
+                    class: studentClass,
+                    idNumber: id || '',
+                    addedDate: formatDate(new Date())
+                };
+                
+                appData.students.push(newStudent);
+                
+                // حفظ البيانات في LocalStorage
+                localStorage.setItem('nrasad_students', JSON.stringify(appData.students));
+                
+                // تحديث الجداول
+                loadStudentsTable();
+                loadAttendanceTable();
+                
+                // إعادة تعيين النموذج
+                this.reset();
+                
+                // عرض رسالة نجاح
+                showMessage('تم إضافة الطالب بنجاح', 'success');
+                
+                // الانتقال إلى تبويب الحضور
+                document.querySelector('.tab[data-tab="attendance"]').click();
+            });
+            
+            // زر بدء يوم جديد
+            document.getElementById('new-day-btn').addEventListener('click', function() {
+                if (confirm('هل أنت متأكد من بدء يوم جديد؟ سيتم مسح حالات الحضور لهذا اليوم.')) {
+                    // إنشاء تاريخ جديد (اليوم التالي)
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                    
+                    // تعيين اليوم الجديد كتاريخ حالي
+                    appData.currentDate = tomorrowStr;
+                    
+                    // تحديث عرض التاريخ
+                    const formattedDate = tomorrow.toLocaleDateString('ar-SA', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    document.getElementById('current-date').textContent = formattedDate;
+                    
+                    // تحديث حقل تاريخ التقرير
+                    document.getElementById('report-date').value = tomorrowStr;
+                    
+                    // تحديث جدول الحضور
+                    loadAttendanceTable();
+                    
+                    // تحديث العدادات
+                    updateCounters();
+                    
+                    showMessage('تم بدء يوم جديد بنجاح', 'success');
+                }
+            });
+            
+            // زر إنشاء التقرير
+            document.getElementById('generate-report-btn').addEventListener('click', function() {
+                const reportDate = document.getElementById('report-date').value;
+                generateReport(reportDate);
+            });
+            
+            // زر تصدير PDF باستخدام html2pdf
+            document.getElementById('export-pdf-btn').addEventListener('click', function() {
+                const reportDate = document.getElementById('report-date').value;
+                exportToPDF(reportDate);
+            });
+            
+            // زر طباعة التقرير
+            document.getElementById('print-report-btn').addEventListener('click', function() {
+                const reportDate = document.getElementById('report-date').value;
+                printReport(reportDate);
+            });
+            
+            // زر مسح جميع البيانات
+            document.getElementById('clear-data-btn').addEventListener('click', function() {
+                if (confirm('هل أنت متأكد من مسح جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                    localStorage.clear();
+                    appData.students = [];
+                    appData.attendance = {};
+                    
+                    // إعادة تحميل الجداول
+                    loadStudentsTable();
+                    loadAttendanceTable();
+                    updateCounters();
+                    
+                    // إخفاء التقرير
+                    document.getElementById('report-results').style.display = 'none';
+                    
+                    showMessage('تم مسح جميع البيانات بنجاح', 'success');
+                }
+            });
+        }
+
+        // حذف طالب
+        function deleteStudent(studentId) {
+            if (!confirm('هل أنت متأكد من حذف هذا الطالب؟ سيتم أيضًا حذف جميع سجلات حضوره.')) {
+                return;
+            }
+            
+            // حذف الطالب من القائمة
+            appData.students = appData.students.filter(student => student.id !== studentId);
+            
+            // حذف سجلات الحضور للطالب من جميع الأيام
+            for (const date in appData.attendance) {
+                if (appData.attendance[date][studentId]) {
+                    delete appData.attendance[date][studentId];
+                }
+            }
+            
+            // حفظ البيانات في LocalStorage
+            localStorage.setItem('nrasad_students', JSON.stringify(appData.students));
+            localStorage.setItem('nrasad_attendance', JSON.stringify(appData.attendance));
+            
+            // تحديث الجداول
+            loadStudentsTable();
+            loadAttendanceTable();
+            updateCounters();
+            
+            showMessage('تم حذف الطالب بنجاح', 'success');
+        }
+
+        // توليد التقرير
+        function generateReport(date) {
+            const reportDate = date || appData.currentDate;
+            const attendanceData = appData.attendance[reportDate] || {};
+            
+            const reportResults = document.getElementById('report-results');
+            const reportTitle = document.getElementById('report-title');
+            const reportTableBody = document.getElementById('report-table-body');
+            const noReportData = document.getElementById('no-report-data');
+            const absentList = document.getElementById('absent-list');
+            const lateList = document.getElementById('late-list');
+            const reportCounters = document.getElementById('report-counters');
+            
+            // تحديث عنوان التقرير
+            const reportDateObj = new Date(reportDate);
+            const formattedReportDate = reportDateObj.toLocaleDateString('ar-SA', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            reportTitle.textContent = `تقرير الحضور ليوم ${formattedReportDate}`;
+            
+            // إذا لم توجد بيانات لهذا التاريخ
+            if (Object.keys(attendanceData).length === 0) {
+                reportTableBody.innerHTML = '';
+                absentList.innerHTML = '<li>لا يوجد غائبين</li>';
+                lateList.innerHTML = '<li>لا يوجد متأخرين</li>';
+                noReportData.style.display = 'block';
+                reportResults.style.display = 'block';
+                return;
+            }
+            
+            noReportData.style.display = 'none';
+            
+            // حساب الإحصائيات
+            let presentCount = 0;
+            let absentCount = 0;
+            let lateCount = 0;
+            const absentStudents = [];
+            const lateStudents = [];
+            
+            // إنشاء جدول التقرير
+            let tableHTML = '';
+            
+            appData.students.forEach(student => {
+                const status = attendanceData[student.id] || 'unmarked';
+                const statusText = getStatusText(status);
+                const statusClass = getStatusClass(status);
+                
+                // تحديث العدادات
+                if (status === 'present') presentCount++;
+                else if (status === 'absent') {
+                    absentCount++;
+                    absentStudents.push({name: student.name, class: student.class});
+                }
+                else if (status === 'late') {
+                    lateCount++;
+                    lateStudents.push({name: student.name, class: student.class});
+                }
+                
+                tableHTML += `
+                    <tr>
+                        <td>${student.name}</td>
+                        <td>${student.class}</td>
+                        <td>${student.id || '-'}</td>
+                        <td class="status-${statusClass}">${statusText}</td>
+                    </tr>
+                `;
+            });
+            
+            reportTableBody.innerHTML = tableHTML;
+            
+            // تحديث العدادات في التقرير
+            reportCounters.innerHTML = `
+                <div class="counter present-counter">
+                    <h3>الحاضرون</h3>
+                    <div class="counter-value">${presentCount}</div>
+                </div>
+                <div class="counter absent-counter">
+                    <h3>الغائبون</h3>
+                    <div class="counter-value">${absentCount}</div>
+                </div>
+                <div class="counter late-counter">
+                    <h3>المتأخرون</h3>
+                    <div class="counter-value">${lateCount}</div>
+                </div>
+            `;
+            
+            // تحديث قوائم الغائبين والمتأخرين
+            let absentHTML = '';
+            if (absentStudents.length > 0) {
+                absentStudents.forEach(student => {
+                    absentHTML += `<li>• ${student.name} - ${student.class}</li>`;
+                });
+            } else {
+                absentHTML = '<li>لا يوجد غائبين</li>';
+            }
+            absentList.innerHTML = absentHTML;
+            
+            let lateHTML = '';
+            if (lateStudents.length > 0) {
+                lateStudents.forEach(student => {
+                    lateHTML += `<li>• ${student.name} - ${student.class}</li>`;
+                });
+            } else {
+                lateHTML = '<li>لا يوجد متأخرين</li>';
+            }
+            lateList.innerHTML = lateHTML;
+            
+            // عرض قسم التقرير
+            reportResults.style.display = 'block';
+        }
+
+        // ============================================
+        // دالات إنشاء PDF باستخدام html2pdf.js
+        // ============================================
+
+        // إنشاء محتوى HTML لملف PDF
+        function createPDFContent(date) {
+            const reportDate = date || appData.currentDate;
+            const attendanceData = appData.attendance[reportDate] || {};
+            
+            // تنسيق التاريخ
+            const reportDateObj = new Date(reportDate);
+            const arabicMonths = [
+                'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+                'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+            ];
+            
+            const formattedDate = `${reportDateObj.getDate()} ${arabicMonths[reportDateObj.getMonth()]} ${reportDateObj.getFullYear()}`;
+            
+            // حساب الإحصائيات
+            let presentCount = 0, absentCount = 0, lateCount = 0;
+            const absentStudents = [], lateStudents = [];
+            
+            appData.students.forEach(student => {
+                const status = attendanceData[student.id] || 'unmarked';
+                if (status === 'present') presentCount++;
+                else if (status === 'absent') {
+                    absentCount++;
+                    absentStudents.push(student);
+                } else if (status === 'late') {
+                    lateCount++;
+                    lateStudents.push(student);
+                }
+            });
+            
+            // إنشاء HTML للمحتوى
+            let tableRows = '';
+            appData.students.forEach((student, index) => {
+                const status = attendanceData[student.id] || 'unmarked';
+                let statusText = '', statusColor = '';
+                
+                switch(status) {
+                    case 'present': 
+                        statusText = 'حاضر';
+                        statusColor = '#4CAF50';
+                        break;
+                    case 'absent': 
+                        statusText = 'غائب';
+                        statusColor = '#f44336';
+                        break;
+                    case 'late': 
+                        statusText = 'متأخر';
+                        statusColor = '#ff9800';
+                        break;
+                    default: 
+                        statusText = 'لم يتم التسجيل';
+                        statusColor = '#999999';
+                }
+                
+                tableRows += `
+                    <tr>
+                        <td style="text-align: center; padding: 8px;">${index + 1}</td>
+                        <td style="text-align: right; padding: 8px;">${student.name}</td>
+                        <td style="text-align: right; padding: 8px;">${student.class}</td>
+                        <td style="text-align: right; padding: 8px;">${student.id || '-'}</td>
+                        <td style="text-align: center; padding: 8px; color: ${statusColor}; font-weight: bold;">${statusText}</td>
+                    </tr>
+                `;
+            });
+            
+            let absentListHTML = '';
+            if (absentStudents.length > 0) {
+                absentStudents.forEach((student, index) => {
+                    absentListHTML += `<div style="margin-bottom: 5px;">${index + 1}. ${student.name} - ${student.class}</div>`;
+                });
+            } else {
+                absentListHTML = '<div>لا يوجد غائبين</div>';
+            }
+            
+            let lateListHTML = '';
+            if (lateStudents.length > 0) {
+                lateStudents.forEach((student, index) => {
+                    lateListHTML += `<div style="margin-bottom: 5px;">${index + 1}. ${student.name} - ${student.class}</div>`;
+                });
+            } else {
+                lateListHTML = '<div>لا يوجد متأخرين</div>';
+            }
+            
+            return `
+                <div id="pdf-content" style="font-family: 'Cairo', 'Tajawal', sans-serif; direction: rtl; padding: 20px; max-width: 100%;">
+                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2c5aa0; padding-bottom: 15px;">
+                        <h1 style="color: #2c5aa0; margin-bottom: 10px; font-size: 28px;">تقرير حضور الطلاب</h1>
+                        <div style="font-size: 16px; color: #555;">
+                            <div>التاريخ: ${formattedDate}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-around; margin-bottom: 30px; text-align: center;">
+                        <div style="flex: 1; padding: 15px; background: #e8f5e9; border-radius: 10px; margin: 0 10px;">
+                            <div style="font-size: 32px; color: #4CAF50; font-weight: bold;">${presentCount}</div>
+                            <div style="font-size: 18px; color: #555;">الحاضرون</div>
+                        </div>
+                        <div style="flex: 1; padding: 15px; background: #ffebee; border-radius: 10px; margin: 0 10px;">
+                            <div style="font-size: 32px; color: #f44336; font-weight: bold;">${absentCount}</div>
+                            <div style="font-size: 18px; color: #555;">الغائبون</div>
+                        </div>
+                        <div style="flex: 1; padding: 15px; background: #fff3e0; border-radius: 10px; margin: 0 10px;">
+                            <div style="font-size: 32px; color: #ff9800; font-weight: bold;">${lateCount}</div>
+                            <div style="font-size: 18px; color: #555;">المتأخرون</div>
+                        </div>
+                    </div>
+                    
+                    <h2 style="color: #2c5aa0; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">تفاصيل حضور الطلاب</h2>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                        <thead>
+                            <tr style="background-color: #f0f5ff; color: #2c5aa0;">
+                                <th style="padding: 12px; text-align: center; border: 1px solid #ddd; width: 50px;">م</th>
+                                <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">اسم الطالب</th>
+                                <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">الصف / الشعبة</th>
+                                <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">رقم الهوية</th>
+                                <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">حالة الحضور</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                    
+                    <div style="display: flex; margin-top: 30px; gap: 20px;">
+                        <div style="flex: 1; padding: 20px; background: #ffebee; border-radius: 8px;">
+                            <h3 style="color: #f44336; margin-bottom: 15px;">قائمة الغائبين</h3>
+                            ${absentListHTML}
+                        </div>
+                        <div style="flex: 1; padding: 20px; background: #fff3e0; border-radius: 8px;">
+                            <h3 style="color: #ff9800; margin-bottom: 15px;">قائمة المتأخرين</h3>
+                            ${lateListHTML}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #777; font-size: 14px;">
+                        <div>تم إنشاء هذا التقرير بواسطة منصة "نرصد" لإدارة حضور الطلاب</div>
+                        <div>تاريخ الإنشاء: ${new Date().toLocaleDateString('ar-SA')}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // دالة تصدير PDF باستخدام html2pdf.js
+        async function exportToPDF(date) {
+            try {
+                const reportDate = date || appData.currentDate;
+                const attendanceData = appData.attendance[reportDate] || {};
+                
+                if (Object.keys(attendanceData).length === 0) {
+                    showMessage('لا توجد بيانات للتاريخ المحدد', 'error');
+                    return;
+                }
+                
+                // تغيير حالة زر التصدير لإظهار التحميل
+                const exportBtn = document.getElementById('export-pdf-btn');
+                const exportBtnText = document.getElementById('export-pdf-text');
+                const originalText = exportBtnText.textContent;
+                exportBtnText.textContent = 'جاري التصدير...';
+                exportBtn.classList.add('btn-pdf-loading');
+                exportBtn.disabled = true;
+                
+                // إنشاء محتوى PDF
+                const pdfContent = createPDFContent(reportDate);
+                
+                // تعبئة العنصر المخفي بمحتوى PDF
+                const pdfContainer = document.getElementById('pdf-content');
+                pdfContainer.innerHTML = pdfContent;
+                
+                // خيارات html2pdf
+                const opt = {
+                    margin: [10, 10, 10, 10],
+                    filename: `تقرير_حضور_${reportDate}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: true,
+                        letterRendering: true,
+                        allowTaint: true,
+                        backgroundColor: '#FFFFFF'
+                    },
+                    jsPDF: { 
+                        unit: 'mm', 
+                        format: 'a4', 
+                        orientation: 'portrait',
+                        compress: true
+                    },
+                    pagebreak: { mode: 'avoid-all' }
+                };
+                
+                // تحويل وعرض PDF
+                await html2pdf().set(opt).from(pdfContent).save();
+                
+                // استعادة حالة زر التصدير
+                setTimeout(() => {
+                    exportBtnText.textContent = originalText;
+                    exportBtn.classList.remove('btn-pdf-loading');
+                    exportBtn.disabled = false;
+                }, 1000);
+                
+                showMessage('تم تصدير التقرير كملف PDF بنجاح', 'success');
+                
+            } catch (error) {
+                console.error('خطأ في تصدير تقرير PDF:', error);
+                showMessage('حدث خطأ أثناء تصدير ملف PDF', 'error');
+                
+                // استعادة حالة زر التصدير في حالة الخطأ
+                const exportBtn = document.getElementById('export-pdf-btn');
+                const exportBtnText = document.getElementById('export-pdf-text');
+                exportBtnText.textContent = 'تصدير كملف PDF';
+                exportBtn.classList.remove('btn-pdf-loading');
+                exportBtn.disabled = false;
+            }
+        }
+
+        // دالة طباعة التقرير
+        function printReport(date) {
+            const reportDate = date || appData.currentDate;
+            const attendanceData = appData.attendance[reportDate] || {};
+            
+            if (Object.keys(attendanceData).length === 0) {
+                showMessage('لا توجد بيانات للتاريخ المحدد', 'error');
+                return;
+            }
+            
+            // إنشاء محتوى PDF
+            const pdfContent = createPDFContent(reportDate);
+            
+            // فتح نافذة جديدة للطباعة
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html dir="rtl" lang="ar">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>طباعة تقرير الحضور</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Cairo&family=Tajawal&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Cairo', 'Tajawal', sans-serif; direction: rtl; padding: 20px; }
+                        @media print {
+                            body { margin: 0; padding: 10px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${pdfContent}
+                    <div class="no-print" style="text-align: center; margin-top: 30px;">
+                        <button onclick="window.print()" style="padding: 10px 20px; background: #2c5aa0; color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Cairo';">طباعة</button>
+                        <button onclick="window.close()" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px; font-family: 'Cairo';">إغلاق</button>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        // تنسيق التاريخ
+        function formatDate(date) {
+            return date.toLocaleDateString('ar-SA', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        // عرض رسائل التنبيه
+        function showMessage(text, type) {
+            const messageContainer = document.getElementById('message-container');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${type}`;
+            messageDiv.innerHTML = `<span>${text}</span>`;
+            
+            messageContainer.appendChild(messageDiv);
+            
+            // إزالة الرسالة بعد 3 ثوانٍ
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
